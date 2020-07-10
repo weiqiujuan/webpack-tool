@@ -1,15 +1,15 @@
-const webpack=require('webpack');
+const webpack = require('webpack');
 const path = require('path');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const CleanWebpackPlugin=require("clean-webpack-plugin");
-const HtmlWebpackPlugin=require("html-webpack-plugin");
+const CleanWebpackPlugin = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
     entry: "./app/index.js",
-    devServer:{
-        port:8081
+    devServer: {
+        port: 8081
     },
     output: {
         path: path.resolve(__dirname, "build"),
@@ -19,7 +19,7 @@ module.exports = {
     module: {
         rules: [
             {
-                // js 文件才使用 babel
+                // es6兼容
                 test: /\.js$/,
                 // 使用哪个 loader
                 use: 'babel-loader',
@@ -56,16 +56,17 @@ module.exports = {
             }
         ]
     },
-    plugins:[
-        //输出文件路径
+    plugins: [
+        //输出文件路径：hash保证不缓存
         new ExtractTextPlugin("css/[name].[hash].css"),
         // 只删除 dist 文件夹下的 bundle 和 manifest 文件
-        new CleanWebpackPlugin(['dist/bundle.*.js','dist/manifest.*.js'], {
+        new CleanWebpackPlugin(['dist/bundle.*.js', 'dist/manifest.*.js'], {
             // 打印 log
             verbose: true,
             // 删除文件
             dry: false
         }),
+        // 生成html文件模板
         new HtmlWebpackPlugin({
             template: 'index.html'
         }),
@@ -89,6 +90,5 @@ module.exports = {
             },
             sourceMap: true
         })
-
     ]
 };
